@@ -14,7 +14,7 @@
 */
 
 use Laravel\Lumen\Routing\Router;
-
+$router->get('/', 'BooksController@getBooks');
 $router->get('books/', 'BooksController@getBooks');
 $router->get('books/{id}', 'BooksController@getBook');
 $router->post('books/{book}/comments', 'CommentsController@store');
