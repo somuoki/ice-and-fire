@@ -14,9 +14,7 @@ class BooksController  extends Controller {
     }
 
     public function getBook($id){
-        return view('book',[
-           'book' => $this->books('id', $id),
-        ]);
+        return json_encode($this->books('id', $id));
     }
 
     public function getBooks(Request $request){
@@ -31,7 +29,7 @@ class BooksController  extends Controller {
             return isset($sort) ? $this->order($data, $sort, $desc) : $data;
 
         }
-        return $this->books();
+        return json_encode($this->books());
     }
 
     public function books($identifier=NULL, $value=NULL, array $pages=NULL){
