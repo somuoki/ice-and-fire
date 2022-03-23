@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 class BooksController  extends Controller {
 
     public function index(Request $request){
-        $data['data'] = $this->order($this->books('','',['pageSize'=>100]), 'name', TRUE)[0];
+        $data['data'] = $this->order($this->books('','',['pageSize'=>100]), 'name', TRUE);
         return view('home',$data);
     }
 
@@ -46,21 +46,22 @@ class BooksController  extends Controller {
         if (!empty($pages)){
             $url = $url == 'books' ? $url . '/?' . http_build_query($pages) : $url . '&' . http_build_query($pages);
         }
-        $books = Cache::remember($url, 86400, function () use ($url){
-            return (new IceAndFire)->getData($url);
-        });
-
-//        $books = (new IceAndFire)->getData($url);
-        if (is_array($books)){
-            foreach ($books as $book) {
-                $this->getComments($book);
-            }
-        }else{
-            $this->getComments($books);
-        }
+        //        $books = (new IceAndFire)->getData($url);
 
 
-       return $books;
+
+       return Cache::remember($url, 10, function () use ($url){
+           $books =  (new IceAndFire)->getData($url);
+           $books_category = array();
+           if (is_array($books)){
+               foreach ($books as $book) {
+                   $books_category[] = $this->getComments($book);
+               }
+           }else{
+               $books_category = $this->getComments($books);
+           }
+           return $books_category;
+       });
     }
 
     public function getComments($book){
