@@ -69,7 +69,7 @@ class BooksController  extends Controller {
             $book->comment_count = count($data);
             $book->comments = $data;
 
-        return $book;
+        return json_encode($book);
     }
 
 }
