@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class BooksController  extends Controller {
 
     public function index(Request $request){
-        $data['data'] = $this->order($this->books('','',['pageSize'=>100]), 'name', TRUE);
+        $data['data'] = $this->order($this->books('','',['pageSize'=>100]), 'name', TRUE)[0];
         return view('home',$data);
     }
 
@@ -43,7 +43,6 @@ class BooksController  extends Controller {
         }
 
         if (!empty($pages)){
-            echo $url;
             $url = $url == 'books' ? $url . '/?' . http_build_query($pages) : $url . '&' . http_build_query($pages);
         }
 
@@ -61,15 +60,16 @@ class BooksController  extends Controller {
     }
 
     public function getComments($book){
-            $id = (new IceAndFire)->getId($book->url);
+
+            $id = (new IceAndFire)->getId($book['url']);
 
             $data = Comments::getComments($id);
 
-            $book->id = $id;
-            $book->comment_count = count($data);
-            $book->comments = $data;
+            $book['id'] = $id;
+            $book['comment_count'] = count($data);
+            $book['comments'] = $data;
 
-        return json_encode($book);
+        return $book;
     }
 
 }

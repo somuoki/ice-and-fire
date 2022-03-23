@@ -21,7 +21,7 @@ class IceAndFire extends Model {
     public function jsonResults($response)
     {
         // return $response->getBody();
-        return $response->getStatusCode() == 200 ? json_decode($response->getBody(), true) : throw new \Exception('Server error');
+        return $response->getStatusCode() == 200 ? json_decode($response->getBody(), true) : throw new Exception('Server Error');
     }
 
     public function getId(string $url){
