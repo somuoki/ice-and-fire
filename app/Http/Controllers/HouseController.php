@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\IceAndFire;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class HouseController extends Controller
 {
@@ -45,7 +46,9 @@ class HouseController extends Controller
             $url = $url == 'houses' ? $url . '/?' . http_build_query($pages) : $url . '&' . http_build_query($pages);
         }
 
-        return (new IceAndFire)->getData($url);
+        return  Cache::rememberForever($url, function () use ($url) {
+            return (new IceAndFire)->getData($url);
+        });
     }
 
     public function getCharacters(array $filters, $desc = TRUE){

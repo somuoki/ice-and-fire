@@ -6,6 +6,7 @@ use App\Models\Comments;
 use App\Models\IceAndFire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class BooksController  extends Controller {
 
@@ -19,6 +20,10 @@ class BooksController  extends Controller {
     }
 
     public function getBooks(Request $request){
+        $array = [
+            'request' => $request
+        ];
+        Log::info('request info', $array);
         if (!empty($request)){
             $params = (new IceAndFire)->getParameters($request); // get parameters set by user
 
@@ -50,7 +55,7 @@ class BooksController  extends Controller {
 
 
 
-       return Cache::remember($url, 10, function () use ($url){
+       return Cache::remember($url, 86400, function () use ($url){
            $books =  (new IceAndFire)->getData($url);
            $books_category = array();
            if (is_array($books)){
