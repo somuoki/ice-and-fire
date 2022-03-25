@@ -86,12 +86,12 @@ array(
 array(
     'region' => 'The Westerlands',
     'words' => '',
-    'hasWords' => ''TRUE'',
-    'hasTitles' => ''TRUE'',
-    'hasSeats' => ''TRUE'',
-    'hasDiedOut' => ''TRUE'',
-    'hasAncestralWeapons' => ''TRUE'',
-    page' => 2,
+    'hasWords' => 'FALSE',
+    'hasTitles' => 'TRUE',
+    'hasSeats' => 'FALSE',
+    'hasDiedOut' => 'TRUE',
+    'hasAncestralWeapons' => 'TRUE',
+    'page' => 2,
     'pageSize' => 24 //get 24 books
     )
 ```
