@@ -28,25 +28,28 @@ class IceAndFire extends Model {
         return (int)basename($url);
     }
 
-    public function getParameters(Request $request){
-        if ($request->input('page') !== null){ $page['page'] = $request->input('page'); }
-        if($request->input('pageSize') !== null){ $page['pageSize'] = $request->input('pageSize');}
-        if ($request->input('id' !== null)){
-            return ['error' => 'End point getBooks does not accept id parameter try using getBook'];
-        }elseif ($request->input('name' !== null)){
-            $identifier = 'name';
-            $value = $request->input('name');
-        }elseif ($request->input('fromReleaseDate' !== null)){
-            $identifier = 'fromReleaseDate';
-            $value = $request->input('fromReleaseDate');
-        }elseif ($request->input('toReleaseDate' !== null)){
-            $identifier = 'toReleaseDate';
-            $value = $request->input('toReleaseDate');
-        }
-        $data['identifier'] = $identifier ?? null;
-        $data['value'] = $value ?? null;
-        $data['page'] = $page ?? null;
 
-        return $data;
+
+    public function getAge($character, $total_age=0, Request $request = null)
+    {
+
+        $character['id'] = $this->getId($character['url']);
+        $born = preg_replace('/\D/', '', $character['born']);
+        $died = preg_replace('/\D/', '', $character['died']);
+        if ($died != '' && $born != '') {
+            $character['age'] = $died - $born;
+        } elseif ($born != '' && $died == '') {
+            $possible_age = 305 - $born;
+            $character['age'] = $possible_age > 104 ? 'Time of death Unknown' : $possible_age;
+        } else {
+            $character['age'] = 'Unknown';
+        }
+        if($request != null){
+            if ($request->input('gender') != null) {
+                $age = is_numeric($character['age']) ? $character['age'] : 0;
+                $total_age += $age;
+            }
+        }
+        return ['character' => $character, 'total_age' => $total_age];
     }
 }

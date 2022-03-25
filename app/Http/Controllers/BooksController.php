@@ -15,17 +15,13 @@ class BooksController  extends Controller {
         return view('home',$data);
     }
 
-    public function getBook($id){
+    public function getBook(Request $request, $id){
         return $this->books('id', $id);
     }
 
     public function getBooks(Request $request){
-        $array = [
-            'request' => $request
-        ];
-        Log::info('request info', $array);
         if (!empty($request)){
-            $params = (new IceAndFire)->getParameters($request); // get parameters set by user
+            $params = $this->getParameters($request); // get parameters set by user
 
             $data = $this->books($params['identifier'] ?? null, $params['value'] ?? null, $params['page'] ?? null); //get books fitting parameters
 
@@ -58,7 +54,7 @@ class BooksController  extends Controller {
        return Cache::remember($url, 86400, function () use ($url){
            $books =  (new IceAndFire)->getData($url);
            $books_category = array();
-           if (is_array($books)){
+           if (is_array($books) && ! array_key_exists('url', $books)){
                foreach ($books as $book) {
                    $books_category[] = $this->getComments($book);
                }
@@ -80,6 +76,28 @@ class BooksController  extends Controller {
             $book['comments'] = $data;
 
         return $book;
+    }
+
+    public function getParameters(Request $request){
+        if ($request->input('page') !== null){ $page['page'] = $request->input('page'); }
+        if($request->input('pageSize') !== null){ $page['pageSize'] = $request->input('pageSize');} else{ $page['pageSize'] = 1000; }
+        if ($request->input('id' !== null)){
+            return ['error' => 'End point getBooks does not accept id parameter try using getBook'];
+        }elseif ($request->input('name' !== null)){
+            $identifier = 'name';
+            $value = $request->input('name');
+        }elseif ($request->input('fromReleaseDate' !== null)){
+            $identifier = 'fromReleaseDate';
+            $value = $request->input('fromReleaseDate');
+        }elseif ($request->input('toReleaseDate' !== null)){
+            $identifier = 'toReleaseDate';
+            $value = $request->input('toReleaseDate');
+        }
+        $data['identifier'] = $identifier ?? null;
+        $data['value'] = $value ?? null;
+        $data['page'] = $page ?? null;
+
+        return $data;
     }
 
 }

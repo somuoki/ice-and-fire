@@ -17,10 +17,10 @@ use Laravel\Lumen\Routing\Router;
 $router->get('/', 'BooksController@index');
 $router->get('books/', 'BooksController@getBooks');
 $router->get('books/{id}', 'BooksController@getBook');
-$router->post('books/{book}/comments', 'CommentsController@store');
+$router->post('books/{id}/comment', 'CommentsController@store');
 
 $router->get('characters/', 'CharactersController@getCharacters');
 $router->get('characters/{id}', 'CharactersController@getCharacter');
 
 $router->get('houses/', 'HouseController@getHouses');
-$router->get('houses/{id}', 'HouseController@getHouses');
+$router->get('houses/{id}', 'HouseController@getHouse');
