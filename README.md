@@ -21,6 +21,10 @@ Run the following command to create an apache server instance
 
 https://topup-ice.herokuapp.com/api/
 
+##Api Consumer app
+https://gotconsumer.herokuapp.com/
+https://github.com/somuoki/got-api-consumer
+
 ## Endpoints
 
 The Api uses a total of 4 endpoints in which you can pass an array of parameters
